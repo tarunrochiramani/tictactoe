@@ -19,8 +19,24 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -43,10 +59,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>1.3.0</version>
-                <configuration>
-                    <project>trs-tictactoe</project>
-                </configuration>
+                <version>1.3.1</version>
             </plugin>
         </plugins>
     </build>
