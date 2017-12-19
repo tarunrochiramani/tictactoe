@@ -1,8 +1,8 @@
 package com.tr.game;
 
 import com.tr.exception.InvalidMoveException;
-import com.tr.game.GameBoard.Piece;
 import com.tr.utils.Constants;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -17,11 +17,15 @@ import static org.junit.Assert.assertTrue;
 public class GameServiceTest {
 
     private GameService gameService = new GameService();
+    private GameBoard gameBoard;
+
+    @Before
+    public void setUp() {
+        gameBoard = gameService.initGame(Piece.X);
+    }
 
     @Test
     public void canInitGame() {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
-
         assertNotNull(gameBoard);
         assertEquals(Piece.X, gameBoard.getTurn());
         assertNull(gameBoard.getWinner());
@@ -30,19 +34,16 @@ public class GameServiceTest {
 
     @Test (expected = InvalidMoveException.class)
     public void cannotPlayMoveWhenOutOfTurn() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
         gameService.playMove(gameBoard, Piece.O, new Position(1,1));
     }
 
     @Test (expected = InvalidMoveException.class)
     public void cannotPlayMoveOutOfBoard() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
         gameService.playMove(gameBoard, Piece.O, new Position(4,1));
     }
 
     @Test (expected = InvalidMoveException.class)
     public void cannotPlayMoveOnAlreadyUsedPosition() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
         gameService.playMove(gameBoard, Piece.X, new Position(1,1));
 
         gameService.playMove(gameBoard, Piece.O, new Position(1,1));
@@ -50,7 +51,6 @@ public class GameServiceTest {
 
     @Test
     public void canPlayMoveAndWinRow() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(1,1)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,1)));
@@ -63,7 +63,6 @@ public class GameServiceTest {
 
     @Test(expected = InvalidMoveException.class)
     public void cannotPlayMoveAfterWinRow() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(1,1)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,1)));
@@ -76,7 +75,6 @@ public class GameServiceTest {
 
     @Test
     public void canPlayMoveAndWinColumn() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(0,2)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,1)));
@@ -88,7 +86,6 @@ public class GameServiceTest {
 
     @Test
     public void canPlayMoveAndWinDiagonal() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(0,0)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,1)));
@@ -100,7 +97,6 @@ public class GameServiceTest {
 
     @Test
     public void canPlayMoveAndWinDiagonal_Reverse() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(0,2)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,1)));
@@ -112,7 +108,6 @@ public class GameServiceTest {
 
     @Test
     public void canPlayMoveAndDraw() throws InvalidMoveException {
-        GameBoard gameBoard = gameService.initGame(3, Piece.X);
 
         assertFalse(gameService.playMove(gameBoard, Piece.X, new Position(1,1)));
         assertFalse(gameService.playMove(gameBoard, Piece.O, new Position(0,0)));

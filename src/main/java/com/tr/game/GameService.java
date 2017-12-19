@@ -1,17 +1,15 @@
 package com.tr.game;
 
 import com.tr.exception.InvalidMoveException;
-import com.tr.game.GameBoard;
-import com.tr.game.GameBoard.Piece;
-import com.tr.game.Position;
+import com.tr.utils.Constants;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class GameService {
 
-    public GameBoard initGame(int size, Piece turn) {
-        return new GameBoard(size, turn);
+
+    public GameBoard initGame(Piece turn) {
+        return new GameBoard(Constants.SIZE, turn);
     }
 
     public boolean playMove(GameBoard gameBoard, Piece piece, Position position) throws InvalidMoveException {

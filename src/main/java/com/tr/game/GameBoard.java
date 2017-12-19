@@ -2,7 +2,6 @@ package com.tr.game;
 
 import com.tr.exception.InvalidMoveException;
 import com.tr.utils.Constants;
-import org.springframework.stereotype.Component;
 
 public final class GameBoard {
     private int size;
@@ -10,26 +9,6 @@ public final class GameBoard {
     private int numberOfMoves = 0;
     private String winner = null;
     private int turn;
-
-    public enum Piece {
-        X (1), O (0);
-        private int value;
-
-        Piece(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Piece fromValue(int value) {
-            if (X.value == value) {
-                return X;
-            }
-            return O;
-        }
-    }
 
     public GameBoard(int size, Piece turn) {
         this.size = size;
