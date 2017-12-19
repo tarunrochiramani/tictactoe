@@ -20,8 +20,8 @@ public class GameController {
     }
 
     @RequestMapping(value = "/rest/initGame", method = RequestMethod.POST)
-    public GameBoard initGame(@RequestBody Piece startingPiece) {
-        return gameService.initGame(startingPiece);
+    public GameBoard initGame() {
+        return gameService.initGame(Piece.X);
     }
 
 }
