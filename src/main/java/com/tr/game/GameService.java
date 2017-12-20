@@ -7,7 +7,7 @@ import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.utils.Constants;
 import com.tr.utils.Helper;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +73,8 @@ public class GameService {
         }
 
         String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
-        gameRequestMapping.put(channelId, new Pair<>(initiatorUserId, secondPlayerId ));
-        responseURLMapping.put(new Pair<>(channelId, initiatorUserId), responseURL);
+        gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
+        responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);
         return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " hasSent Game Request to " +  secondPlayerId).build();
