@@ -2,7 +2,8 @@ package com.tr.builder;
 
 import com.tr.game.GameBoard;
 import com.tr.mediaType.GameBoardMediaType;
-import javafx.util.Builder;
+import org.apache.commons.lang3.builder.Builder;
+
 
 public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
     private GameBoardMediaType gameBoardMediaType = new GameBoardMediaType();
