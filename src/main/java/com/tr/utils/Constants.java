@@ -6,10 +6,11 @@ public class Constants {
     public static final int SIZE = 3;
 
 
-    public static final String SLACK_HEADER_CHANNEL_ID = "channel_id";
-    public static final String SLACK_HEADER_USER_ID = "user_id";
-    public static final String SLACK_HEADER_TEXT = "text";
-    public static final String SLACK_HEADER_RESPONSE_URL = "response_url";
+    public static final String SLACK_REQUEST_PARAM_CHANNEL_ID = "channel_id";
+    public static final String SLACK_REQUEST_PARAM_USER_ID = "user_id";
+    public static final String SLACK_REQUEST_PARAM_TEXT = "text";
+    public static final String SLACK_REQUEST_PARAM_RESPONSE_URL = "response_url";
+    public static final String SLACK_REQUEST_PARAM_TOKEN = "token";
 
     public static final String SLACK_ATTACHMENT_FALLBACK = "fallback";
     public static final String SLACK_ATTACHMENT_PRETEXT = "pretext";

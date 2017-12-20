@@ -8,9 +8,9 @@ import com.tr.mediaType.GameBoardMediaType;
 import com.tr.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.tr.builder.GameBoardMediaTypeBuilder.aGameBoardMediaTypeBuilder;
@@ -25,10 +25,10 @@ public class GameController {
     }
 
     @RequestMapping(value = "/rest/requestGame", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public GameBoardMediaType requestGame(@RequestHeader(value = Constants.SLACK_HEADER_CHANNEL_ID) String channelId,
-                                          @RequestHeader(value = Constants.SLACK_HEADER_USER_ID) String initiatorUserId,
-                                          @RequestHeader(value = Constants.SLACK_HEADER_TEXT) String text,
-                                          @RequestHeader(value = Constants.SLACK_HEADER_RESPONSE_URL) String responseURL) {
+    public GameBoardMediaType requestGame(@RequestParam(value = Constants.SLACK_REQUEST_PARAM_CHANNEL_ID) String channelId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_USER_ID) String initiatorUserId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_TEXT) String text,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_RESPONSE_URL) String responseURL) {
         return gameService.requestGame(channelId, initiatorUserId, text, responseURL);
     }
 

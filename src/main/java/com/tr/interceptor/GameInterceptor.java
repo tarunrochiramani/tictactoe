@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Enumeration;
 
+import com.tr.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,19 +20,12 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object object) {
         String method = request.getMethod();
-        String token = request.getHeader("token");
-        Enumeration<String> headerNames = request.getHeaderNames();
-
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                logger.info("Header: " + request.getHeader(headerNames.nextElement()));
-            }
-        }
+        String token = request.getParameter(Constants.SLACK_REQUEST_PARAM_TOKEN);
 
         Enumeration params = request.getParameterNames();
         while(params.hasMoreElements()){
             String paramName = (String)params.nextElement();
-            System.out.println("Param : " + paramName + " = " + request.getParameter(paramName));
+            logger.info("Param : " + paramName + " = " + request.getParameter(paramName));
         }
 
         logger.info("RequestURI - " + request.getRequestURI() + " method - " + method + " token - " + token) ;
