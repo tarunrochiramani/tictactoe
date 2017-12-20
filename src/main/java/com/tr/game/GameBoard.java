@@ -25,7 +25,7 @@ public final class GameBoard {
         return Piece.fromValue(turn);
     }
 
-    public String toString() {
+    public String getBoard() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int row=0; row < size; row++) {
             stringBuilder.append("\n|");

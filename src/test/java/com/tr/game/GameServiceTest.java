@@ -29,7 +29,7 @@ public class GameServiceTest {
         assertNotNull(gameBoard);
         assertEquals(Piece.X, gameBoard.getTurn());
         assertNull(gameBoard.getWinner());
-        assertNotNull(gameBoard.toString());
+        assertNotNull(gameBoard.getBoard());
     }
 
     @Test (expected = InvalidMoveException.class)
