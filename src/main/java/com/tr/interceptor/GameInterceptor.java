@@ -3,6 +3,8 @@ package com.tr.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Enumeration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,9 +17,16 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response, Object object) throws Exception {
+                             HttpServletResponse response, Object object) {
         String method = request.getMethod();
         String token = request.getHeader("token");
+        Enumeration<String> headerNames = request.getHeaderNames();
+
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                logger.info("Header: " + request.getHeader(headerNames.nextElement()));
+            }
+        }
 
         logger.info("RequestURI - " + request.getRequestURI() + " method - " + method + " token - " + token) ;
         return true;
