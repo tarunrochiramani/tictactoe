@@ -10,6 +10,7 @@ public class GameService {
 
     public GameBoard initGame(Piece turn) {
         return new GameBoard(Constants.SIZE, turn);
+
     }
 
     public boolean playMove(GameBoard gameBoard, Piece piece, Position position) throws InvalidMoveException {
