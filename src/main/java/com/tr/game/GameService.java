@@ -78,7 +78,7 @@ public class GameService {
         String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
         gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
         responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
-        slackMessagePostService.sendEphermalMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId, responseURL);
+        slackMessagePostService.sendEphermalMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId);
 
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);

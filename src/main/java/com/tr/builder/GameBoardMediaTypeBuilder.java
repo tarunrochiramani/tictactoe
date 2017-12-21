@@ -52,14 +52,13 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
             this.gameBoardMediaType.setAttachments(attachments);
         }
 
-        Map<String, Object> attachmentProperties = new HashMap<>();
+        Map<String, Object> attachmentProperties = attachments.get(0);
         attachmentProperties.put(SLACK_ATTACHMENT_FALLBACK, fallback);
         attachmentProperties.put(SLACK_ATTACHMENT_PRETEXT, pretext);
         attachmentProperties.put(SLACK_ATTACHMENT_TITLE, title);
         attachmentProperties.put(SLACK_ATTACHMENT_TITLE_LINK, title_link);
         attachmentProperties.put(SLACK_ATTACHMENT_TEXT, text);
         attachmentProperties.put(SLACK_ATTACHMENT_COLOR, SLACK_ATTACHMENT_COLOR_VALUE);
-        attachments.add(attachmentProperties);
 
         return this;
     }
@@ -73,7 +72,7 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
             this.gameBoardMediaType.setAttachments(attachments);
         }
 
-        Map<String, Object> attachmentProperties = new HashMap<>();
+        Map<String, Object> attachmentProperties = attachments.get(0);
         attachmentProperties.put(SLACK_ATTACHMENT_TEXT, text);
         attachmentProperties.put(SLACK_ATTACHMENT_FALLBACK, fallback);
         attachmentProperties.put(SLACK_ATTACHMENT_CALLBACK_ID, callbackid);
