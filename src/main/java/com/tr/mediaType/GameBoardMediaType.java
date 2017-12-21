@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class GameBoardMediaType {
     private String response_type;
     private String text;
-    private List<Map<String, String>> attachments;
+    private List<Map<String, Object>> attachments;
 
     public String getText() {
         return text;
@@ -20,11 +20,11 @@ public class GameBoardMediaType {
         this.text = text;
     }
 
-    public List<Map<String, String>> getAttachments() {
+    public List<Map<String, Object>> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Map<String, String>> attachments) {
+    public void setAttachments(List<Map<String, Object>> attachments) {
         this.attachments = attachments;
     }
 

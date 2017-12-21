@@ -3,6 +3,7 @@ package com.tr.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.service.SlackMessagePostService;
@@ -77,10 +78,11 @@ public class GameService {
         String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
         gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
         responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
-        slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Trying out the aSync").build(), responseURL);
+        slackMessagePostService.sendEphermalMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId, responseURL);
+
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);
 
-        return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " hasSent Game Request to " +  secondPlayerId).build();
+        return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " has sent Game Request to " +  secondPlayerId).build();
     }
 }

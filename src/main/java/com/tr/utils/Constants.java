@@ -18,7 +18,11 @@ public class Constants {
     public static final String SLACK_ATTACHMENT_TEXT = "text";
     public static final String SLACK_ATTACHMENT_COLOR = "color";
     public static final String SLACK_ATTACHMENT_COLOR_VALUE = "#F35A00";
+    public static final String SLACK_ATTACHMENT_TYPE = "attachment_type";
+    public static final String SLACK_ATTACHMENT_CALLBACK_ID = "callback_id";
+    public static final String SLACK_ACTIONS = "actions";
 
-    public static final String SLACK_TOKEN = "x0dU4LW87DX0L3zcBx9BM8ou";
+
+    public static final String SLACK_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemeral";
     public static final String SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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";
 }

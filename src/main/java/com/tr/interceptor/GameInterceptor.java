@@ -15,6 +15,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component
 public class GameInterceptor extends HandlerInterceptorAdapter {
     private static Logger logger = LoggerFactory.getLogger(GameInterceptor.class);
+    private static final String SLACK_TOKEN = "x0dU4LW87DX0L3zcBx9BM8ou";
 
     @Override
     public boolean preHandle(HttpServletRequest request,
