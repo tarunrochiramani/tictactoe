@@ -25,7 +25,7 @@ public class GameInterceptor extends HandlerInterceptorAdapter {
         Enumeration params = request.getParameterNames();
         while(params.hasMoreElements()){
             String paramName = (String)params.nextElement();
-            logger.info("Param : " + paramName + " = " + request.getParameter(paramName));
+            logger.debug("Param : " + paramName + " = " + request.getParameter(paramName));
         }
 
         logger.info("RequestURI - " + request.getRequestURI() + " method - " + method + " token - " + token) ;

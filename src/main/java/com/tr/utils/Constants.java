@@ -5,7 +5,6 @@ public class Constants {
     public static String DRAW = "Draw - No winner";
     public static final int SIZE = 3;
 
-
     public static final String SLACK_REQUEST_PARAM_CHANNEL_ID = "channel_id";
     public static final String SLACK_REQUEST_PARAM_USER_ID = "user_id";
     public static final String SLACK_REQUEST_PARAM_TEXT = "text";
@@ -20,5 +19,6 @@ public class Constants {
     public static final String SLACK_ATTACHMENT_COLOR = "color";
     public static final String SLACK_ATTACHMENT_COLOR_VALUE = "#F35A00";
 
-
+    public static final String SLACK_TOKEN = "x0dU4LW87DX0L3zcBx9BM8ou";
+    public static final String SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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";
 }

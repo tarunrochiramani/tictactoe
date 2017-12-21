@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
+import com.tr.service.SlackMessagePostService;
 import com.tr.utils.Constants;
 import com.tr.utils.Helper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,6 +21,7 @@ public class GameService {
     private static Logger logger = LoggerFactory.getLogger(GameService.class);
 
     @Autowired private Helper helper;
+    @Autowired private SlackMessagePostService slackMessagePostService;
 
     // Channel ID : GameBoard
     private Map<String, GameBoard> games = new HashMap<>();
@@ -75,8 +77,10 @@ public class GameService {
         String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
         gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
         responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
+        slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Trying out the aSync").build(), responseURL);
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);
+
         return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " hasSent Game Request to " +  secondPlayerId).build();
     }
 }
