@@ -6,4 +6,4 @@
 *.classpath
 *lib/
 *.DS_Store
-application.properties
+*.properties
