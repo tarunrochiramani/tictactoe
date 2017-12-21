@@ -3,6 +3,7 @@ package com.tr;
 import com.tr.builder.GameBoardMediaTypeBuilder;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.service.SlackMessagePostService;
+import com.tr.utils.Constants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -17,6 +18,6 @@ public class SlackMessagePostServiceTest {
     @Test
     public void canPostMessage() {
         GameBoardMediaType message = aGameBoardMediaTypeBuilder().withAttachment("someFallback", "somePreText", "sometitle", "somelink", "someText").build();
-        slackMessagePostService.sendMessage(message);
+        slackMessagePostService.sendMessage(message, Constants.SLACK_WEBHOOK_URL);
     }
 }
