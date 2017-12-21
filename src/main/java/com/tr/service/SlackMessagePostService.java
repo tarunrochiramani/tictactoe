@@ -28,7 +28,6 @@ import static com.tr.builder.SlackMessageActionBuilder.aSlackMessageActionBuilde
 @Service
 @Async
 public class SlackMessagePostService {
-
     @Autowired private Environment environment;
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -38,15 +37,15 @@ public class SlackMessagePostService {
     private static Logger logger = LoggerFactory.getLogger(SlackMessagePostService.class);
 
 
-    public ResponseEntity<String> sendEphermalMessageToConfirmGame(String channelId, String initiatorUserId, String secondPlayerId) {
+    public ResponseEntity<String> sendEphemeralMessageToConfirmGame(String channelId, String initiatorUserId, String secondPlayerId) {
         String accessToken = environment.getProperty("ACCESS_TOKEN");
         String headerText = "You have been challenged";
         String text = "Would you like to play TicTacTao Game with - " + initiatorUserId;
         String fallbackText = "You are unable to accept the challenge";
         String callback_id = channelId + "-" + initiatorUserId + "-" + secondPlayerId;
 
-        SlackMessageAction accept = aSlackMessageActionBuilder().withName("response").withText("Accept Challenge").withType("button").withValue("accept").build();
-        SlackMessageAction reject = aSlackMessageActionBuilder().withName("response").withText("Reject").withType("button").withValue("reject").build();
+        SlackMessageAction accept = aSlackMessageActionBuilder().withName("response").withText("Accept Challenge").withType("button").withValue(Constants.ACCEPT).build();
+        SlackMessageAction reject = aSlackMessageActionBuilder().withName("response").withText("Reject").withType("button").withValue(Constants.REJECT).build();
         GameBoardMediaType gameBoardMediaType = aGameBoardMediaTypeBuilder().withMessageButtonAttachment(headerText, text, fallbackText, callback_id, "#3AA3E3", accept, reject).build();
 
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

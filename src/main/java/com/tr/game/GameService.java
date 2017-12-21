@@ -1,14 +1,16 @@
 package com.tr.game;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.service.SlackMessagePostService;
 import com.tr.utils.Constants;
 import com.tr.utils.Helper;
+import com.tr.utils.SlackMessageAction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +80,36 @@ public class GameService {
         String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
         gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
         responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
-        slackMessagePostService.sendEphermalMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId);
+        slackMessagePostService.sendEphemeralMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId);
 
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);
 
         return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " has sent Game Request to " +  secondPlayerId).build();
+    }
+
+    public void processReply(List<SlackMessageAction> actions, String callbackid, String responseURL) {
+        logger.info("Actions " + actions.get(0) + " callbackid - " + callbackid);
+        StringTokenizer stringTokenizer = new StringTokenizer(callbackid, "-");
+        String channel = stringTokenizer.nextToken();
+        String initiator = stringTokenizer.nextToken();
+        String secondPlayer = stringTokenizer.nextToken();
+
+        String initiatorResponseURL = responseURLMapping.get(Pair.of(channel, initiator));
+        SlackMessageAction action = actions.get(0);
+
+        if (Constants.REJECT.equals(action.getValue())) {
+            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
+        } else {
+            assignedPiece.put(Pair.of(channel, secondPlayer), Piece.X);
+            assignedPiece.put(Pair.of(channel, initiator), Piece.O);
+            GameBoard gameBoard = initGame(Piece.X);
+            games.put(channel, gameBoard);
+
+            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), responseURL);
+            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
+        }
+
+
     }
 }
