@@ -52,4 +52,10 @@ public class GameController {
         return aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).build();
     }
 
+    @RequestMapping(value = "/rest/playMove", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public GameBoardMediaType playMove(@RequestParam(value = Constants.SLACK_REQUEST_PARAM_CHANNEL_ID) String channelId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_USER_ID) String initiatorUserId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_TEXT) String text) {
+        return gameService.playMove(channelId, initiatorUserId, text);
+    }
 }

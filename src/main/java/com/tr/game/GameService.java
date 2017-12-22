@@ -1,9 +1,7 @@
 package com.tr.game;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -22,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import static com.tr.builder.GameBoardMediaTypeBuilder.aGameBoardMediaTypeBuilder;
 
@@ -55,7 +52,35 @@ public class GameService {
         return assignedPiece;
     }
 
-    public boolean playMove(GameBoard gameBoard, Piece piece, Position position) throws InvalidMoveException {
+    public GameBoardMediaType playMove(String channelId, String initiatorUserId, String text) {
+        logger.info("Received Request for game - channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " text: " + text);
+        if (!games.containsKey(channelId)) {
+            logger.warn("No Game running on channel: " + channelId);
+            return aGameBoardMediaTypeBuilder().withResponseType(true).withText("Unable to play move. No game running on this channel \n To start a game /ttt @user").build();
+        }
+
+        GameBoard gameBoard = games.get(channelId);
+        Piece piece = assignedPiece.get(Pair.of(channelId, initiatorUserId));
+        StringTokenizer stringTokenizer = new StringTokenizer(text);
+        int row = Integer.valueOf(stringTokenizer.nextToken());
+        int col = Integer.valueOf(stringTokenizer.nextToken());
+        Position position = new Position(row, col);
+
+        boolean gameOver = false;
+        try {
+            gameOver = playMove(gameBoard, piece, position);
+        } catch (InvalidMoveException e) {
+            return aGameBoardMediaTypeBuilder().withResponseType(true).withText(e.getMessage()).build();
+        }
+
+        if (gameOver) {
+            games.remove(channelId);
+        }
+
+        return aGameBoardMediaTypeBuilder().withResponseType(true).withGameBoard(gameBoard).build();
+    }
+
+    protected boolean playMove(GameBoard gameBoard, Piece piece, Position position) throws InvalidMoveException {
         if (gameBoard.isBoardFull() || gameBoard.getWinner() != null) {
             throw new InvalidMoveException("Game Over. " + gameBoard.getWinner());
         }
@@ -79,8 +104,8 @@ public class GameService {
             logger.warn("Game already running on channel: " + channelId);
             String fallback = "Unable to request game. A channel can have only one game at one time \n Checkout the current game /currentTTTGame";
             String pretext = "Unable to request game. A channel can have only one game at one time";
-            String title = "Checkout the current game";
-            String title_link = "http://localhost:8080";
+            String title = "Checkout the current game using /currentTTT";
+            String title_link = "";
             String attachmentText = "Try once the game is over";
             return aGameBoardMediaTypeBuilder().withAttachment(fallback, pretext, title, title_link, attachmentText).build();
         }

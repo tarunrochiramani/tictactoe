@@ -1,10 +1,10 @@
 package com.tr.exception;
 
 public class InvalidMoveException extends Exception {
-    private String message = "Invalid Move - ";
+    private String message = "";
 
-    public InvalidMoveException(String additionalMessage) {
-        message = message + additionalMessage;
+    public InvalidMoveException(String message) {
+        this.message = message;
     }
 
     public String getMessage() {
