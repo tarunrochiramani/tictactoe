@@ -2,6 +2,7 @@ package com.tr.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.tr.game.GameBoard;
 import com.tr.game.GameService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +40,7 @@ public class GameController {
     }
 
     @RequestMapping(value = "/rest/slack/interactive", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.PAYLOAD) String payload) {
+    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.PAYLOAD) Map<String, Object> payload) {
 
         gameService.processReply(payload);
 

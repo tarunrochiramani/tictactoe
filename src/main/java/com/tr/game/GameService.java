@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import static com.tr.builder.GameBoardMediaTypeBuilder.aGameBoardMediaTypeBuilder;
 
@@ -90,7 +91,7 @@ public class GameService {
         return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " has sent Game Request to " +  secondPlayerId).build();
     }
 
-    public void processReply(String payload) {
+    public void processReply(Map<String, Object> payload) {
         logger.info("payload - " + payload);
 //        StringTokenizer stringTokenizer = new StringTokenizer(callbackid, "-");
 //        String channel = stringTokenizer.nextToken();
