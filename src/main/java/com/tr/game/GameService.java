@@ -154,13 +154,29 @@ public class GameService {
 
     }
 
-    public GameBoardMediaType currentGame(String channelId, String initiatorUserId, String text) {
-        logger.info("Received Request for game - channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " text: " + text);
+    public GameBoardMediaType currentGame(String channelId) {
+        logger.info("Received Request for game - channelId: " + channelId);
         if (!games.containsKey(channelId)) {
             logger.warn("No Game running on channel: " + channelId);
             return aGameBoardMediaTypeBuilder().withResponseType(true).withText("No game running on this channel \n To start a game /ttt @user").build();
         }
 
         return aGameBoardMediaTypeBuilder().withGameBoard(games.get(channelId)).build();
+    }
+
+    public GameBoardMediaType abortGame(String channelId, String userid) {
+        logger.info("Received Request for game - channelId: " + channelId);
+        if (!games.containsKey(channelId)) {
+            logger.warn("No Game running on channel: " + channelId);
+            return aGameBoardMediaTypeBuilder().withText("No game running on this channel that could be aborted").build();
+        }
+
+        GameBoard gameBoard = games.get(channelId);
+        if (!assignedPiece.get(Pair.of(channelId, userid)).equals(gameBoard.getTurn())) {
+            return aGameBoardMediaTypeBuilder().withText("Cannot Abort the game, as its not your turn").build();
+        }
+
+        games.remove(channelId);
+        return aGameBoardMediaTypeBuilder().withText("Game aborted by " + userid).withGameBoard(games.get(channelId)).withResponseType(true).build();
     }
 }

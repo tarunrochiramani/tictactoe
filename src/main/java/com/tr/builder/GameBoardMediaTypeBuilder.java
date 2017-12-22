@@ -32,6 +32,10 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
 
     public GameBoardMediaTypeBuilder withGameBoard(GameBoard gameBoard) {
         StringBuilder stringBuilder = new StringBuilder();
+        if (gameBoardMediaType.getText() != null && !gameBoardMediaType.getText().isEmpty()) {
+            stringBuilder.append(gameBoardMediaType.getText());
+            stringBuilder.append("\n");
+        }
         stringBuilder.append("\nBoard\n");
         stringBuilder.append(gameBoard.getBoard());
         stringBuilder.append("\n\nTurn - ");
@@ -40,6 +44,7 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
             stringBuilder.append("\n\nWinner - ");
             stringBuilder.append(gameBoard.getWinner());
         }
+
         gameBoardMediaType.setText(stringBuilder.toString());
         return this;
     }
