@@ -80,8 +80,8 @@ public class GameService {
         Pair<String, String> players = channelGamePlayers.get(channelId);
         String playerOneId = players.getLeft();
         String playerTwoId = players.getRight();
-        GameBoardMediaTypeBuilder gameBoardMediaTypeBuilder = aGameBoardMediaTypeBuilder().withText("Player - " + playerOneId + " : " + assignedPiece.get(Pair.of(channelId, playerOneId)))
-                .addText("\nPlayer - " + playerTwoId + " : " + assignedPiece.get(Pair.of(channelId, playerTwoId)))
+        GameBoardMediaTypeBuilder gameBoardMediaTypeBuilder = aGameBoardMediaTypeBuilder().withText("\n<@ " + playerOneId + "> : " + assignedPiece.get(Pair.of(channelId, playerOneId)))
+                .addText("\n<@" + playerTwoId + "> : " + assignedPiece.get(Pair.of(channelId, playerTwoId)))
                 .withResponseType(true)
                 .withGameBoard(gameBoard);
 
@@ -131,7 +131,7 @@ public class GameService {
 
         logger.info("Game request initiated on channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " secondPlayerId: " + secondPlayerId);
 
-        return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " has sent Game Request to " +  secondPlayerId).build();
+        return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: <@" + initiatorUserId + "> has sent Game Request to <@" +  secondPlayerId + ">").build();
     }
 
     public void processReply(String payload){
@@ -151,7 +151,7 @@ public class GameService {
             SlackMessageAction action = actions[0];
 
             if (Constants.REJECT.equals(action.getValue())) {
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withResponseType(true).withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withResponseType(true).withText("Challenge rejected by <@" + secondPlayer + ">").build(), initiatorResponseURL);
             } else {
                 assignedPiece.put(Pair.of(channel, secondPlayer), Piece.X);
                 assignedPiece.put(Pair.of(channel, initiator), Piece.O);
@@ -159,10 +159,10 @@ public class GameService {
                 games.put(channel, gameBoard);
                 channelGamePlayers.put(channel, Pair.of(initiator, secondPlayer));
 
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\nPlayer - " + initiator + " : " + assignedPiece.get(Pair.of(channel, initiator)))
-                        .addText("\nPlayer - " + secondPlayer + " : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Player - " + initiator + " : " + assignedPiece.get(Pair.of(channel, initiator)))
-                        .addText("\nPlayer - " + secondPlayer + " : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).build(), initiatorResponseURL);
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
+                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
+                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).build(), initiatorResponseURL);
             }
         } catch (IOException e) {
             logger.error("Error", e);
@@ -193,6 +193,6 @@ public class GameService {
         }
 
         games.remove(channelId);
-        return aGameBoardMediaTypeBuilder().withGameBoard(games.get(channelId)).addText("\nGame Aborted by " + userid).withResponseType(true).build();
+        return aGameBoardMediaTypeBuilder().withGameBoard(games.get(channelId)).addText("\nGame Aborted by <@" + userid + ">").withResponseType(true).build();
     }
 }
