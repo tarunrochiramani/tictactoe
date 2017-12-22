@@ -40,7 +40,7 @@ public class SlackMessagePostService {
     public ResponseEntity<String> sendEphemeralMessageToConfirmGame(String channelId, String initiatorUserId, String secondPlayerId) {
         String accessToken = environment.getProperty("ACCESS_TOKEN");
         String headerText = "You have been challenged";
-        String text = "Would you like to play TicTacTao Game with - " + initiatorUserId;
+        String text = "Would you like to play TicTacTao Game with <@" + initiatorUserId + ">";
         String fallbackText = "You are unable to accept the challenge";
         String callback_id = channelId + "-" + initiatorUserId + "-" + secondPlayerId;
 

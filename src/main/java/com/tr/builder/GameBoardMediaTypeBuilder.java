@@ -36,7 +36,6 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
             stringBuilder.append(gameBoardMediaType.getText());
             stringBuilder.append("\n");
         }
-        stringBuilder.append("\nBoard\n");
         stringBuilder.append(gameBoard.getBoard());
         stringBuilder.append("\n\nTurn - ");
         stringBuilder.append(gameBoard.getTurn());
