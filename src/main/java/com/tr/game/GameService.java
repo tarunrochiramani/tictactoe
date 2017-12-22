@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
@@ -107,8 +108,9 @@ public class GameService {
             String secondPlayer = stringTokenizer.nextToken();
 
             String initiatorResponseURL = responseURLMapping.get(Pair.of(channel, initiator));
-            List<SlackMessageAction> actions = (List) payloadMap.get(Constants.SLACK_ACTIONS);
-            SlackMessageAction action = actions.get(0);
+            ArrayType actionType = TypeFactory.defaultInstance().constructArrayType(SlackMessageAction.class);
+            SlackMessageAction[] actions = objectMapper.convertValue(payloadMap.get(Constants.SLACK_ACTIONS), actionType);
+            SlackMessageAction action = actions[0];
 
             if (Constants.REJECT.equals(action.getValue())) {
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
