@@ -91,7 +91,7 @@ public class GameService {
             if (!Constants.DRAW.equals(gameBoard.getWinner())) {
                 stringBuilder.append("\n\nWinner <@" + initiatorUserId + ">");
             } else {
-                stringBuilder.append(Constants.DRAW);
+                stringBuilder.append("\n\n" + Constants.DRAW);
             }
             stringBuilder.append("\n\nGAME OVER");
         }
