@@ -46,10 +46,18 @@ public class GameController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
     @RequestMapping(value = "/rest/initGame", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public GameBoardMediaType initGame() {
         GameBoard gameBoard = gameService.initGame(Piece.X);
         return aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).build();
+    }
+
+    @RequestMapping(value = "/rest/currentGame", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public GameBoardMediaType currentGame(@RequestParam(value = Constants.SLACK_REQUEST_PARAM_CHANNEL_ID) String channelId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_USER_ID) String initiatorUserId,
+                                          @RequestParam(value = Constants.SLACK_REQUEST_PARAM_TEXT) String text) {
+        return gameService.currentGame(channelId, initiatorUserId, text);
     }
 
     @RequestMapping(value = "/rest/playMove", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
