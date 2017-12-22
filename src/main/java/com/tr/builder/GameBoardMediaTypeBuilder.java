@@ -99,8 +99,22 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
     }
 
     public GameBoardMediaTypeBuilder withText(String text) {
-        this.gameBoardMediaType.setText(text);
+        if (text != null && !text.isEmpty()) {
+            this.gameBoardMediaType.setText(text);
+        }
         return this;
+    }
+
+    public GameBoardMediaTypeBuilder addText(String text) {
+        String originalText = gameBoardMediaType.getText();
+        StringBuilder stringBuilder = new StringBuilder();
+        if (originalText != null && !originalText.isEmpty()) {
+            stringBuilder.append(originalText);
+        }
+        stringBuilder.append(text);
+        this.gameBoardMediaType.setText(stringBuilder.toString());
+        return this;
+
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.tr.builder.GameBoardMediaTypeBuilder;
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.service.SlackMessagePostService;
@@ -33,6 +34,9 @@ public class GameService {
 
     // Channel ID : GameBoard
     private Map<String, GameBoard> games = new HashMap<>();
+
+    // Channel ID : Initiator ID , Second Player ID
+    private Map<String, Pair<String, String>> channelGamePlayers = new HashMap<>();
 
     // Channel ID ,Player ID : Piece
     private Map<Pair<String, String>, Piece> assignedPiece = new HashMap<>();
@@ -66,18 +70,27 @@ public class GameService {
         int col = Integer.valueOf(stringTokenizer.nextToken());
         Position position = new Position(row, col);
 
-        boolean gameOver = false;
+        boolean gameOver;
         try {
             gameOver = playMove(gameBoard, piece, position);
         } catch (InvalidMoveException e) {
             return aGameBoardMediaTypeBuilder().withText(e.getMessage()).build();
         }
 
+        Pair<String, String> players = channelGamePlayers.get(channelId);
+        String playerOneId = players.getLeft();
+        String playerTwoId = players.getRight();
+        GameBoardMediaTypeBuilder gameBoardMediaTypeBuilder = aGameBoardMediaTypeBuilder().withText("Player - " + playerOneId + " : " + assignedPiece.get(Pair.of(channelId, playerOneId)))
+                .addText("Player - " + playerTwoId + " : " + assignedPiece.get(Pair.of(channelId, playerTwoId)))
+                .withResponseType(true)
+                .withGameBoard(gameBoard);
+
         if (gameOver) {
             games.remove(channelId);
+            gameBoardMediaTypeBuilder.addText("\nGame Over");
         }
 
-        return aGameBoardMediaTypeBuilder().withResponseType(true).withGameBoard(gameBoard).build();
+        return gameBoardMediaTypeBuilder.build();
     }
 
     protected boolean playMove(GameBoard gameBoard, Piece piece, Position position) throws InvalidMoveException {
@@ -144,6 +157,7 @@ public class GameService {
                 assignedPiece.put(Pair.of(channel, initiator), Piece.O);
                 GameBoard gameBoard = initGame(Piece.X);
                 games.put(channel, gameBoard);
+                channelGamePlayers.put(channel, Pair.of(initiator, secondPlayer));
 
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).build(), initiatorResponseURL);
@@ -177,6 +191,6 @@ public class GameService {
         }
 
         games.remove(channelId);
-        return aGameBoardMediaTypeBuilder().withText("Game aborted by " + userid).withGameBoard(games.get(channelId)).withResponseType(true).build();
+        return aGameBoardMediaTypeBuilder().withGameBoard(games.get(channelId)).addText("\nGame Aborted by " + userid).withResponseType(true).build();
     }
 }
