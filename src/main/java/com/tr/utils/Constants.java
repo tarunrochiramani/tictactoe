@@ -31,4 +31,13 @@ public class Constants {
     public static final String ACCEPT = "accept";
     public static final String REJECT = "reject";
 
+    public static final String SLACK_INTERACTIVE_URI = "/rest/slack/interactive";
+    public static final String REQUEST_GAME_URI = "/rest/requestGame";
+    public static final String CURRENT_GAME_URI = "/rest/currentGame";
+    public static final String PLAY_MOVE_URI = "/rest/playMove";
+    public static final String ABORT_GAME_URI = "/rest/abortGame";
+
+    public static final String APPLICATION_PROP_ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String APPLICATION_PROP_SLASH_CMD_TOKEN = "SLASH_CMD_TOKEN";
+
 }

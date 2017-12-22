@@ -1,8 +1,5 @@
 package com.tr.service;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tr.mediaType.GameBoardMediaType;
@@ -38,7 +35,7 @@ public class SlackMessagePostService {
 
 
     public ResponseEntity<String> sendEphemeralMessageToConfirmGame(String channelId, String initiatorUserId, String secondPlayerId) {
-        String accessToken = environment.getProperty("ACCESS_TOKEN");
+        String accessToken = environment.getProperty(Constants.APPLICATION_PROP_ACCESS_TOKEN);
         String headerText = "You have been challenged";
         String text = "Would you like to play TicTacTao Game with <@" + initiatorUserId + ">";
         String fallbackText = "You are unable to accept the challenge";

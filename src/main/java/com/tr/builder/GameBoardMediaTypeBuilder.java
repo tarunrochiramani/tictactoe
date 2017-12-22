@@ -1,6 +1,5 @@
 package com.tr.builder;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 
 import com.tr.game.GameBoard;
 import com.tr.mediaType.GameBoardMediaType;
-import com.tr.utils.Constants;
 import com.tr.utils.SlackMessageAction;
 import org.apache.commons.lang3.builder.Builder;
 

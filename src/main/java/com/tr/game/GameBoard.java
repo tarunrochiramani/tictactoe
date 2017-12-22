@@ -2,6 +2,7 @@ package com.tr.game;
 
 import com.tr.exception.InvalidMoveException;
 import com.tr.utils.Constants;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class GameBoard {
     private int size;
@@ -9,10 +10,12 @@ public final class GameBoard {
     private int numberOfMoves = 0;
     private String winner = null;
     private int turn;
+    private Position[] winners;
 
     public GameBoard(int size, Piece turn) {
         this.size = size;
         this.board = new int[size][size];
+        winners = new Position[size];
         initializeBoard();
         this.turn = turn.getValue();
     }
@@ -31,9 +34,17 @@ public final class GameBoard {
             stringBuilder.append("\n|");
             for (int col=0; col < size; col++) {
                 if (board[row][col] == Constants.EMPTY) {
-                    stringBuilder.append(" -");
+                    stringBuilder.append(" --");
                 } else {
-                    stringBuilder.append(" " + Piece.fromValue(board[row][col]));
+                    Position position = new Position(row, col);
+                    if (ArrayUtils.contains(winners, position)) {
+                        stringBuilder.append(" _*");
+                        stringBuilder.append(Piece.fromValue(board[row][col]));
+                        stringBuilder.append("*_");
+                    } else {
+                        stringBuilder.append(" ");
+                        stringBuilder.append(Piece.fromValue(board[row][col]));
+                    }
                 }
                 stringBuilder.append(" |");
             }
@@ -89,31 +100,40 @@ public final class GameBoard {
     }
 
     private boolean checkDiagonal(int xCoordinate, int yCoordinate, int incrementSize, int value) {
+        Position[] iteratingPositions = new Position[size];
         for (int count=0; count<size; count++) {
             if (board[xCoordinate][yCoordinate] != value) {
                 return false;
             }
+            iteratingPositions[count] = new Position(xCoordinate, yCoordinate);
             xCoordinate += 1;
             yCoordinate += incrementSize;
         }
+        winners = iteratingPositions;
         return true;
     }
 
     private boolean checkColumn(int column, int value) {
+        Position[] iteratingPositions = new Position[size];
         for (int row=0; row<size; row++) {
             if (board[row][column] != value) {
                 return false;
             }
+            iteratingPositions[row] = new Position(row, column);
         }
+        winners = iteratingPositions;
         return true;
     }
 
     private boolean checkRow(int row, int value) {
+        Position[] iteratingPositions = new Position[size];
         for (int col=0; col<size; col++) {
             if (board[row][col] != value) {
                 return false;
             }
+            iteratingPositions[col] = new Position(row, col);
         }
+        winners = iteratingPositions;
         return true;
     }
 
