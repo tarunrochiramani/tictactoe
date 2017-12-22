@@ -34,7 +34,7 @@ public final class GameBoard {
             stringBuilder.append("\n|");
             for (int col=0; col < size; col++) {
                 if (board[row][col] == Constants.EMPTY) {
-                    stringBuilder.append(" --");
+                    stringBuilder.append(" _");
                 } else {
                     Position position = new Position(row, col);
                     if (ArrayUtils.contains(winners, position)) {
