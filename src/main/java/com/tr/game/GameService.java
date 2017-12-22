@@ -81,7 +81,7 @@ public class GameService {
         String playerOneId = players.getLeft();
         String playerTwoId = players.getRight();
         GameBoardMediaTypeBuilder gameBoardMediaTypeBuilder = aGameBoardMediaTypeBuilder().withText("Player - " + playerOneId + " : " + assignedPiece.get(Pair.of(channelId, playerOneId)))
-                .addText("Player - " + playerTwoId + " : " + assignedPiece.get(Pair.of(channelId, playerTwoId)))
+                .addText("\nPlayer - " + playerTwoId + " : " + assignedPiece.get(Pair.of(channelId, playerTwoId)))
                 .withResponseType(true)
                 .withGameBoard(gameBoard);
 
@@ -115,7 +115,7 @@ public class GameService {
         logger.info("Received Request for game - channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " text: " + text);
         if (games.containsKey(channelId)) {
             logger.warn("Game already running on channel: " + channelId);
-            String fallback = "Unable to request game. A channel can have only one game at one time \n Checkout the current game /currentTTTGame";
+            String fallback = "Unable to request game. A channel can have only one game at one time \n Checkout the current game /tttcurrent";
             String pretext = "Unable to request game. A channel can have only one game at one time";
             String title = "Checkout the current game using /currentTTT";
             String title_link = "";
@@ -159,8 +159,10 @@ public class GameService {
                 games.put(channel, gameBoard);
                 channelGamePlayers.put(channel, Pair.of(initiator, secondPlayer));
 
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).build(), initiatorResponseURL);
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\nPlayer - " + initiator + " : " + assignedPiece.get(Pair.of(channel, initiator)))
+                        .addText("\nPlayer - " + secondPlayer + " : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Player - " + initiator + " : " + assignedPiece.get(Pair.of(channel, initiator)))
+                        .addText("\nPlayer - " + secondPlayer + " : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).build(), initiatorResponseURL);
             }
         } catch (IOException e) {
             logger.error("Error", e);
