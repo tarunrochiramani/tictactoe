@@ -38,11 +38,9 @@ public class GameController {
     }
 
     @RequestMapping(value = "/rest/slack/interactive", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.SLACK_ACTIONS)List<SlackMessageAction> actions,
-                                              @RequestParam(value = Constants.SLACK_ATTACHMENT_CALLBACK_ID) String callbackid,
-                                              @RequestParam(value = Constants.SLACK_REQUEST_PARAM_RESPONSE_URL) String responseURL) {
+    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.PAYLOAD) String payload) {
 
-        gameService.processReply(actions, callbackid, responseURL);
+        gameService.processReply(payload);
 
         return new ResponseEntity(HttpStatus.OK);
     }
