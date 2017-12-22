@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.tr.game.GameBoard;
 import com.tr.mediaType.GameBoardMediaType;
+import com.tr.utils.Constants;
 import com.tr.utils.SlackMessageAction;
 import org.apache.commons.lang3.builder.Builder;
 
@@ -39,10 +40,6 @@ public class GameBoardMediaTypeBuilder implements Builder<GameBoardMediaType> {
         stringBuilder.append(gameBoard.getBoard());
         stringBuilder.append("\n\nTurn - ");
         stringBuilder.append(gameBoard.getTurn());
-        if (gameBoard.getWinner() != null) {
-            stringBuilder.append("\n\nWinner - ");
-            stringBuilder.append(gameBoard.getWinner());
-        }
 
         gameBoardMediaType.setText(stringBuilder.toString());
         return this;

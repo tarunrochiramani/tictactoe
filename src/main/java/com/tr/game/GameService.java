@@ -85,10 +85,18 @@ public class GameService {
                 .withResponseType(true)
                 .withGameBoard(gameBoard);
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (gameOver) {
             games.remove(channelId);
-            gameBoardMediaTypeBuilder.addText("\nGame Over");
+            if (!Constants.DRAW.equals(gameBoard.getWinner())) {
+                stringBuilder.append("\n\nWinner <@" + initiatorUserId + ">");
+            } else {
+                stringBuilder.append(Constants.DRAW);
+            }
+            stringBuilder.append("\n\nGAME OVER");
         }
+
+        gameBoardMediaTypeBuilder.addText(stringBuilder.toString());
 
         return gameBoardMediaTypeBuilder.build();
     }
@@ -117,7 +125,7 @@ public class GameService {
             logger.warn("Game already running on channel: " + channelId);
             String fallback = "Unable to request game. A channel can have only one game at one time \n Checkout the current game /ttt-current";
             String pretext = "Unable to request game. A channel can have only one game at one time";
-            String title = "Checkout the current game using /currentTTT";
+            String title = "Checkout the current game using /ttt-current";
             String title_link = "";
             String attachmentText = "Try once the game is over";
             return aGameBoardMediaTypeBuilder().withAttachment(fallback, pretext, title, title_link, attachmentText).build();
@@ -174,7 +182,7 @@ public class GameService {
         logger.info("Received Request for game - channelId: " + channelId);
         if (!games.containsKey(channelId)) {
             logger.warn("No Game running on channel: " + channelId);
-            return aGameBoardMediaTypeBuilder().withResponseType(true).withText("No game running on this channel \n To start a game /ttt @user").build();
+            return aGameBoardMediaTypeBuilder().withText("No game running on this channel \n To start a game /ttt @user").build();
         }
 
         return aGameBoardMediaTypeBuilder().withGameBoard(games.get(channelId)).build();
