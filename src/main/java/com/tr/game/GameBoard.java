@@ -34,13 +34,13 @@ public final class GameBoard {
             stringBuilder.append("\n|");
             for (int col=0; col < size; col++) {
                 if (board[row][col] == Constants.EMPTY) {
-                    stringBuilder.append(" _");
+                    stringBuilder.append(" --");
                 } else {
                     Position position = new Position(row, col);
                     if (ArrayUtils.contains(winners, position)) {
-                        stringBuilder.append(" _*");
+                        stringBuilder.append(" *");
                         stringBuilder.append(Piece.fromValue(board[row][col]));
-                        stringBuilder.append("*_");
+                        stringBuilder.append("*");
                     } else {
                         stringBuilder.append(" ");
                         stringBuilder.append(Piece.fromValue(board[row][col]));
