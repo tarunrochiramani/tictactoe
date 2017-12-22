@@ -56,7 +56,7 @@ public class GameService {
         logger.info("Received Request for game - channelId: " + channelId + " initiatorUserID: " +initiatorUserId + " text: " + text);
         if (!games.containsKey(channelId)) {
             logger.warn("No Game running on channel: " + channelId);
-            return aGameBoardMediaTypeBuilder().withResponseType(true).withText("Unable to play move. No game running on this channel \n To start a game /ttt @user").build();
+            return aGameBoardMediaTypeBuilder().withText("Unable to play move. No game running on this channel \n To start a game /ttt @user").build();
         }
 
         GameBoard gameBoard = games.get(channelId);
@@ -70,7 +70,7 @@ public class GameService {
         try {
             gameOver = playMove(gameBoard, piece, position);
         } catch (InvalidMoveException e) {
-            return aGameBoardMediaTypeBuilder().withResponseType(true).withText(e.getMessage()).build();
+            return aGameBoardMediaTypeBuilder().withText(e.getMessage()).build();
         }
 
         if (gameOver) {
@@ -138,7 +138,7 @@ public class GameService {
             SlackMessageAction action = actions[0];
 
             if (Constants.REJECT.equals(action.getValue())) {
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withResponseType(true).withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
             } else {
                 assignedPiece.put(Pair.of(channel, secondPlayer), Piece.X);
                 assignedPiece.put(Pair.of(channel, initiator), Piece.O);
@@ -146,7 +146,7 @@ public class GameService {
                 games.put(channel, gameBoard);
 
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).build(), initiatorResponseURL);
             }
         } catch (IOException e) {
             logger.error("Error", e);
