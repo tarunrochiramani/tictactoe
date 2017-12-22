@@ -1,5 +1,6 @@
 package com.tr.game;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -95,35 +96,34 @@ public class GameService {
     }
 
     public void processReply(String payload){
-        logger.info("payload - " + payload);
+        logger.info("Processing interactive Slack payload - " + payload);
         JavaType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class);
-        Map<String, Object> payloadValue = null;
         try {
-            payloadValue = objectMapper.readValue(payload, mapType);
+            Map<String, Object> payloadMap = objectMapper.readValue(payload, mapType);
+
+            StringTokenizer stringTokenizer = new StringTokenizer((String)payloadMap.get(Constants.SLACK_ATTACHMENT_CALLBACK_ID), "-");
+            String channel = stringTokenizer.nextToken();
+            String initiator = stringTokenizer.nextToken();
+            String secondPlayer = stringTokenizer.nextToken();
+
+            String initiatorResponseURL = responseURLMapping.get(Pair.of(channel, initiator));
+            List<SlackMessageAction> actions = (List) payloadMap.get(Constants.SLACK_ACTIONS);
+            SlackMessageAction action = actions.get(0);
+
+            if (Constants.REJECT.equals(action.getValue())) {
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
+            } else {
+                assignedPiece.put(Pair.of(channel, secondPlayer), Piece.X);
+                assignedPiece.put(Pair.of(channel, initiator), Piece.O);
+                GameBoard gameBoard = initGame(Piece.X);
+                games.put(channel, gameBoard);
+
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
+                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
+            }
         } catch (IOException e) {
             logger.error("Error", e);
         }
-        logger.info("Payload Map - " + payloadValue.toString());
-//        StringTokenizer stringTokenizer = new StringTokenizer(callbackid, "-");
-//        String channel = stringTokenizer.nextToken();
-//        String initiator = stringTokenizer.nextToken();
-//        String secondPlayer = stringTokenizer.nextToken();
-//
-//        String initiatorResponseURL = responseURLMapping.get(Pair.of(channel, initiator));
-//        SlackMessageAction action = actions.get(0);
-//
-//        if (Constants.REJECT.equals(action.getValue())) {
-//            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("Challenge rejected by - " + secondPlayer).build(), initiatorResponseURL);
-//        } else {
-//            assignedPiece.put(Pair.of(channel, secondPlayer), Piece.X);
-//            assignedPiece.put(Pair.of(channel, initiator), Piece.O);
-//            GameBoard gameBoard = initGame(Piece.X);
-//            games.put(channel, gameBoard);
-//
-//            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), responseURL);
-//            slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
-//        }
-
 
     }
 }
