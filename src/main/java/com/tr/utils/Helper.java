@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Helper {
     public List<String> tokenizeEscapedUser(String text) {
-        return getSubStrings(text, "<@[a-zA-Z0-9]+\\|[a-zA-Z]+>");
+        return getSubStrings(text, "<@[a-zA-Z0-9]+\\|[a-zA-Z0-9\\._]+>");
     }
 
     public List<String> tokenizeEscapedChannel(String text) {
-        return getSubStrings(text, "<#[a-zA-Z0-9]+\\|[a-zA-Z]+>");
+        return getSubStrings(text, "<#[a-zA-Z0-9]+\\|[a-zA-Z0-9\\._]+>");
     }
 
     public String getUserId(String input) {
