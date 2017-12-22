@@ -167,10 +167,10 @@ public class GameService {
                 games.put(channel, gameBoard);
                 channelGamePlayers.put(channel, Pair.of(initiator, secondPlayer));
 
+//                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
+//                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
-                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
-                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
-                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).build(), initiatorResponseURL);
+                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
             }
         } catch (IOException e) {
             logger.error("Error", e);
