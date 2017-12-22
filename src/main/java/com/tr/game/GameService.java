@@ -1,11 +1,14 @@
 package com.tr.game;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.tr.exception.InvalidMoveException;
 import com.tr.mediaType.GameBoardMediaType;
 import com.tr.service.SlackMessagePostService;
@@ -91,8 +94,16 @@ public class GameService {
         return aGameBoardMediaTypeBuilder().withResponseType(true).withText("User: " + initiatorUserId + " has sent Game Request to " +  secondPlayerId).build();
     }
 
-    public void processReply(Map<String, Object> payload) {
+    public void processReply(String payload){
         logger.info("payload - " + payload);
+        JavaType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class);
+        Map<String, Object> payloadValue = null;
+        try {
+            payloadValue = objectMapper.readValue(payload, mapType);
+        } catch (IOException e) {
+            logger.error("Error", e);
+        }
+        logger.info("Payload Map - " + payloadValue.toString());
 //        StringTokenizer stringTokenizer = new StringTokenizer(callbackid, "-");
 //        String channel = stringTokenizer.nextToken();
 //        String initiator = stringTokenizer.nextToken();

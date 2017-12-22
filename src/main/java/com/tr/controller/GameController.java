@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @RequestMapping(value = "/rest/slack/interactive", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.PAYLOAD) Map<String, Object> payload) {
+    public ResponseEntity interactiveResponse(@RequestParam(value = Constants.PAYLOAD) String payload) {
 
         gameService.processReply(payload);
 
