@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Helper {
     public List<String> tokenizeEscapedUser(String text) {
-        return getSubStrings(text, "<@[a-zA-Z0-9]+\\|[a-zA-Z0-9\\._]+>");
+        return getSubStrings(text, "<@[a-zA-Z0-9]+\\|*[a-zA-Z0-9\\._-]+>");
     }
 
     public List<String> tokenizeEscapedChannel(String text) {
-        return getSubStrings(text, "<#[a-zA-Z0-9]+\\|[a-zA-Z0-9\\._]+>");
+        return getSubStrings(text, "<#[a-zA-Z0-9]+\\|*[a-zA-Z0-9\\._-]+>");
     }
 
     public String getUserId(String input) {
@@ -35,5 +35,15 @@ public class Helper {
         }
         return tokens;
 
+    }
+
+    public boolean validMoveText(String text) {
+        Pattern pattern = Pattern.compile("^(\\d\\s\\d)");
+        Matcher matcher = pattern.matcher(text);
+        if (!matcher.find()) {
+            return false;
+        }
+
+        return true;
     }
 }

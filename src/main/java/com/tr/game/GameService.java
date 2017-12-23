@@ -2,6 +2,7 @@ package com.tr.game;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -61,6 +62,16 @@ public class GameService {
         if (!games.containsKey(channelId)) {
             logger.warn("No Game running on channel: " + channelId);
             return aGameBoardMediaTypeBuilder().withText("Unable to play move. No game running on this channel \n To start a game /ttt @user").build();
+        }
+
+        if (!assignedPiece.containsKey(Pair.of(channelId, initiatorUserId))) {
+            logger.error("User : " + initiatorUserId + " is not playing this game and cannot make a move.");
+            return aGameBoardMediaTypeBuilder().withText("Unable to play move. User <@" + initiatorUserId + "> is not a part of this game").build();
+        }
+
+        if (text == null || text.isEmpty() || !helper.validMoveText(text)) {
+            logger.error("Invalid text in PlayMove: " + text);
+            return aGameBoardMediaTypeBuilder().withText("Invalid Slash command usage.").build();
         }
 
         GameBoard gameBoard = games.get(channelId);
@@ -131,7 +142,16 @@ public class GameService {
             return aGameBoardMediaTypeBuilder().withAttachment(fallback, pretext, title, title_link, attachmentText).build();
         }
 
-        String secondPlayerId = helper.getUserId(helper.tokenizeEscapedUser(text).get(0));
+        if (text == null || text.isEmpty()) {
+            logger.error("Invalid text in Request Game: " + text);
+            return aGameBoardMediaTypeBuilder().withText("Invalid Slash command usage.").build();
+        }
+        List<String> escapedUser = helper.tokenizeEscapedUser(text);
+        if (escapedUser == null || escapedUser.isEmpty()) {
+            logger.error("Invalid text in Request Game: " + text);
+            return aGameBoardMediaTypeBuilder().withText("Invalid Slash command usage.").build();
+        }
+        String secondPlayerId = helper.getUserId(escapedUser.get(0));
         gameRequestMapping.put(channelId, Pair.of(initiatorUserId, secondPlayerId ));
         responseURLMapping.put(Pair.of(channelId, initiatorUserId), responseURL);
         slackMessagePostService.sendEphemeralMessageToConfirmGame(channelId, initiatorUserId, secondPlayerId);
@@ -167,8 +187,6 @@ public class GameService {
                 games.put(channel, gameBoard);
                 channelGamePlayers.put(channel, Pair.of(initiator, secondPlayer));
 
-//                slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
-//                        .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), (String)payloadMap.get(Constants.SLACK_REQUEST_PARAM_RESPONSE_URL));
                 slackMessagePostService.sendMessage(aGameBoardMediaTypeBuilder().withText("\nLets Play!!\n\n<@" + initiator + "> : " + assignedPiece.get(Pair.of(channel, initiator)))
                         .addText("\n<@" + secondPlayer + "> : " + assignedPiece.get(Pair.of(channel, secondPlayer))).withGameBoard(gameBoard).withResponseType(true).build(), initiatorResponseURL);
             }
@@ -195,8 +213,13 @@ public class GameService {
             return aGameBoardMediaTypeBuilder().withText("No game running on this channel that could be aborted").build();
         }
 
+        if (!assignedPiece.containsKey(Pair.of(channelId, userid))) {
+            logger.error("User : " + userid + " is not playing this game and cannot make a move.");
+            return aGameBoardMediaTypeBuilder().withText("Cannot Abort the game. User <@" + userid + "> is not a part of this game").build();
+        }
+
         GameBoard gameBoard = games.get(channelId);
-        if (!assignedPiece.get(Pair.of(channelId, userid)).equals(gameBoard.getTurn())) {
+        if (!gameBoard.getTurn().equals(assignedPiece.get(Pair.of(channelId, userid)))) {
             return aGameBoardMediaTypeBuilder().withText("Cannot Abort the game, as its not your turn").build();
         }
 

@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class HelperTest {
@@ -35,5 +36,15 @@ public class HelperTest {
         assertEquals(1, strings.size());
         assertEquals("<#C012ABCDE|he_re>", strings.get(0));
         assertEquals("C012ABCDE", helper.getChannelID(strings.get(0)));
+    }
+
+    @Test
+    public void canValidateMoveText() {
+        assertFalse(helper.validMoveText("ab cd"));
+        assertFalse(helper.validMoveText("a1 c2"));
+        assertFalse(helper.validMoveText("a12"));
+        assertFalse(helper.validMoveText("a12 9"));
+        assertFalse(helper.validMoveText("12 9"));
+        assertTrue(helper.validMoveText("1 9"));
     }
 }
